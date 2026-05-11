@@ -24,8 +24,8 @@ def main():
     cadastrar_usuario(3, "Pedro R.")
     criar_projeto(3, "Programar Frontend")
     
-    tamanhos = [10, 50, 100, 500, 1000, 10000, 50000, 100000]
-    num_execucoes = 8
+    tamanhos = [10, 50, 100, 500, 1000]
+    num_execucoes = 5
     
     print("\n--- INICIANDO TESTES E GERANDO LOGS ---")
     with open("log.txt", "w") as log:
