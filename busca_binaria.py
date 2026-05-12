@@ -1,24 +1,27 @@
 import tarefa
 
-def buscaBinaria(chave, in_file, inicio, fim):
-    comparacoes = 0
-    t = None
-    cod = -1
+def buscaBinaria(id_buscado, arquivo_dados, posicao_inicio, posicao_fim):
+    quantidade_comparacoes = 0
+    tarefa_encontrada = None
+    id_tarefa_atual = -1
 
-    while inicio <= fim and cod != chave:
-        meio = (inicio + fim) // 2
-        # A lógica da professora usa o meio-1 para posicionar o ponteiro
-        in_file.seek((meio - 1) * tarefa.tamanho_registro())
-        t = tarefa.le(in_file)
+    while posicao_inicio <= posicao_fim and id_tarefa_atual != id_buscado:
+        posicao_meio = (posicao_inicio + posicao_fim) // 2
         
-        if t:
-            comparacoes += 1
-            cod = t['cod']
-            if cod > chave:
-                fim = meio - 1
-            elif cod < chave:
-                inicio = meio + 1
+        # Pula direto para a posição do meio
+        arquivo_dados.seek((posicao_meio - 1) * tarefa.tamanho_registro())
+        tarefa_encontrada = tarefa.le(arquivo_dados)
+        
+        if tarefa_encontrada:
+            quantidade_comparacoes += 1
+            id_tarefa_atual = tarefa_encontrada['cod']
+            
+            if id_tarefa_atual > id_buscado:
+                posicao_fim = posicao_meio - 1
+            elif id_tarefa_atual < id_buscado:
+                posicao_inicio = posicao_meio + 1
 
-    if cod == chave:
-        return t, comparacoes
-    return None, comparacoes
+    if id_tarefa_atual == id_buscado:
+        return tarefa_encontrada, quantidade_comparacoes
+        
+    return None, quantidade_comparacoes

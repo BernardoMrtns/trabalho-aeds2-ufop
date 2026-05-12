@@ -1,27 +1,36 @@
 import tarefa
 
-def insertionSort(in_file, tam):
-    trocas = 0
-    for j in range(2, tam + 1):
-        in_file.seek((j - 1) * tarefa.tamanho_registro())
-        tj = tarefa.le(in_file)
-        i = j - 1
+def insertionSort(arquivo_dados, quantidade_registros):
+    total_trocas = 0
+    
+    for posicao_atual in range(2, quantidade_registros + 1):
+        # Lê a tarefa que queremos encaixar na posição certa
+        arquivo_dados.seek((posicao_atual - 1) * tarefa.tamanho_registro())
+        tarefa_atual = tarefa.le(arquivo_dados)
         
-        in_file.seek((i - 1) * tarefa.tamanho_registro())
-        ti = tarefa.le(in_file)
+        posicao_anterior = posicao_atual - 1
         
-        while i > 0 and ti['cod'] > tj['cod']:
-            in_file.seek(i * tarefa.tamanho_registro())
-            tarefa.salva(ti, in_file)
-            trocas += 1
+        # Lê a tarefa que vem logo atrás dela
+        arquivo_dados.seek((posicao_anterior - 1) * tarefa.tamanho_registro())
+        tarefa_anterior = tarefa.le(arquivo_dados)
+        
+        # Enquanto a tarefa de trás tiver um ID maior que a nossa tarefa atual...
+        while posicao_anterior > 0 and tarefa_anterior['cod'] > tarefa_atual['cod']:
+            # Empurra a tarefa de trás uma posição para frente
+            arquivo_dados.seek(posicao_anterior * tarefa.tamanho_registro())
+            tarefa.salva(tarefa_anterior, arquivo_dados)
+            total_trocas += 1
             
-            i -= 1
-            if i > 0:
-                in_file.seek((i - 1) * tarefa.tamanho_registro())
-                ti = tarefa.le(in_file)
+            posicao_anterior -= 1
+            
+            # Puxa a próxima tarefa de trás para continuar comparando
+            if posicao_anterior > 0:
+                arquivo_dados.seek((posicao_anterior - 1) * tarefa.tamanho_registro())
+                tarefa_anterior = tarefa.le(arquivo_dados)
         
-        in_file.seek(i * tarefa.tamanho_registro())
-        tarefa.salva(tj, in_file)
-        trocas += 1
+        # Encontrou o "buraco" correto, salva a tarefa atual ali
+        arquivo_dados.seek(posicao_anterior * tarefa.tamanho_registro())
+        tarefa.salva(tarefa_atual, arquivo_dados)
+        total_trocas += 1
         
-    return trocas
+    return total_trocas

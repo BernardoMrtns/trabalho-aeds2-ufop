@@ -1,0 +1,22 @@
+=== LOG DE DESEMPENHO DE BUSCAS ===
+
+Tamanho da Base: 10 registros
+Busca Sequencial -> Comparacoes: 10 | Tempo (s): 0.000045
+Busca Binaria    -> Comparacoes: 4 | Tempo (s): 0.000012
+--------------------------------------------------
+Tamanho da Base: 50 registros
+Busca Sequencial -> Comparacoes: 50 | Tempo (s): 0.000070
+Busca Binaria    -> Comparacoes: 6 | Tempo (s): 0.000013
+--------------------------------------------------
+Tamanho da Base: 100 registros
+Busca Sequencial -> Comparacoes: 100 | Tempo (s): 0.000105
+Busca Binaria    -> Comparacoes: 7 | Tempo (s): 0.000013
+--------------------------------------------------
+Tamanho da Base: 500 registros
+Busca Sequencial -> Comparacoes: 500 | Tempo (s): 0.000314
+Busca Binaria    -> Comparacoes: 9 | Tempo (s): 0.000014
+--------------------------------------------------
+Tamanho da Base: 1000 registros
+Busca Sequencial -> Comparacoes: 1000 | Tempo (s): 0.000769
+Busca Binaria    -> Comparacoes: 10 | Tempo (s): 0.000022
+--------------------------------------------------
