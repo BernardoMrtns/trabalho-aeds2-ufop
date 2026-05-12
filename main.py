@@ -6,7 +6,6 @@ from busca_sequencial import buscaSequencial
 from busca_binaria import buscaBinaria
 
 def inicializar_arquivos():
-    """Garante que os arquivos de texto existam para as operações iniciais."""
     if not os.path.exists("usuarios_db.txt"):
         with open("usuarios_db.txt", "w", encoding="utf-8") as f:
             f.write("1;Diogo V.\n2;Bernardo M.\n3;Pedro R.\n")
@@ -15,7 +14,6 @@ def inicializar_arquivos():
             f.write("1;Sistema de Vendas ERP\n2;Aplicativo Mobile de Entregas\n3;Novo Portal Corporativo\n")
 
 def executar_testes_desempenho():
-    """Cumpre os Requisitos 4 e 5: Testes de escala e log.txt."""
     tamanhos_de_base = [10, 50, 100, 500, 1000]
     with open("log.txt", "w", encoding="utf-8") as arquivo_log:
         arquivo_log.write("=== LOG DE DESEMPENHO DE BUSCAS ===\n\n")
