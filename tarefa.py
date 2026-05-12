@@ -1,7 +1,6 @@
 import struct
 import random
 
-# Estrutura binária: id(int), proj_id(int), usr_id(int), status(int), desc(50 chars)
 FORMATO_BINARIO = 'i i i i 50s'
 TAMANHO_REGISTRO = struct.calcsize(FORMATO_BINARIO)
 
@@ -57,7 +56,6 @@ def embaralha(lista_ids):
     for _ in range(quantidade_trocas):
         indice_a = random.randint(0, tamanho_lista - 1)
         indice_b = random.randint(0, tamanho_lista - 1)
-        # Troca os valores de lugar na lista
         lista_ids[indice_a], lista_ids[indice_b] = lista_ids[indice_b], lista_ids[indice_a]
 
 def criarBase(nome_arquivo, quantidade_registros):
@@ -80,6 +78,6 @@ def criarBase(nome_arquivo, quantidade_registros):
             salva(nova_tarefa, arquivo_destino)
 
 def tamanho_arquivo(arquivo_origem):
-    arquivo_origem.seek(0, 2) # Vai para o final do arquivo
+    arquivo_origem.seek(0, 2)
     total_bytes = arquivo_origem.tell()
     return int(total_bytes // TAMANHO_REGISTRO)

@@ -8,7 +8,6 @@ def buscaBinaria(id_buscado, arquivo_dados, posicao_inicio, posicao_fim):
     while posicao_inicio <= posicao_fim and id_tarefa_atual != id_buscado:
         posicao_meio = (posicao_inicio + posicao_fim) // 2
         
-        # Pula direto para a posição do meio
         arquivo_dados.seek((posicao_meio - 1) * tarefa.tamanho_registro())
         tarefa_encontrada = tarefa.le(arquivo_dados)
         

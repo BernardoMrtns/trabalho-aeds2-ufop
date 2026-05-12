@@ -1,3 +1,0 @@
-1;Migração de Dashboards
-2;Programar Backend
-3;Programar Frontend
