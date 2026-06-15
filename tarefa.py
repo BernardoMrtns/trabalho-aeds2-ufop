@@ -64,8 +64,8 @@ def criarBase(nome_arquivo, quantidade_registros):
     
     with open(nome_arquivo, 'wb') as arquivo_destino:
         for indice in range(quantidade_registros):
-            id_projeto_aleatorio = random.randint(1, 3)
-            id_usuario_aleatorio = random.randint(1, 3)
+            id_projeto_aleatorio = random.randint(1, 500)
+            id_usuario_aleatorio = random.randint(1, 1000)
             id_tarefa_atual = lista_ids[indice]
             
             nova_tarefa = criar_tarefa(
@@ -76,7 +76,7 @@ def criarBase(nome_arquivo, quantidade_registros):
                 descricao_tarefa=f"Atividade automatica {id_tarefa_atual}"
             )
             salva(nova_tarefa, arquivo_destino)
-
+            
 def tamanho_arquivo(arquivo_origem):
     arquivo_origem.seek(0, 2)
     total_bytes = arquivo_origem.tell()

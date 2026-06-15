@@ -2,46 +2,62 @@ import time
 import os
 import tarefa
 import ordenacao
+import quicksort_externo
+import particoes_intercalacao
 from busca_sequencial import buscaSequencial
 from busca_binaria import buscaBinaria
 
 def inicializar_arquivos():
     if not os.path.exists("usuarios_db.txt"):
         with open("usuarios_db.txt", "w", encoding="utf-8") as f:
-            f.write("1;Diogo V.\n2;Bernardo M.\n3;Pedro R.\n")
+            for i in range(1, 1001):
+                f.write(f"{i};Usuario Placeholder {i}\n")
+                
     if not os.path.exists("projetos_db.txt"):
         with open("projetos_db.txt", "w", encoding="utf-8") as f:
-            f.write("1;Sistema de Vendas ERP\n2;Aplicativo Mobile de Entregas\n3;Novo Portal Corporativo\n")
+            for i in range(1, 501):
+                f.write(f"{i};Projeto Placeholder {i}\n")
 
 def executar_testes_desempenho():
-    tamanhos_de_base = [10, 50, 100, 500, 1000]
+    tamanhos_de_base = [1000, 10000, 100000, 500000]
+    
     with open("log.txt", "w", encoding="utf-8") as arquivo_log:
-        arquivo_log.write("=== LOG DE DESEMPENHO DE BUSCAS ===\n\n")
+        arquivo_log.write("=== LOG DE DESEMPENHO DE ORDENAÇÃO EXTERNA ===\n\n")
         
         for qtd in tamanhos_de_base:
-            print(f"Gerando e ordenando base de {qtd} registros...")
-            tarefa.criarBase("tarefas_db.dat", qtd)
+            print(f"Gerando base de {qtd} registros para testes...")
+            nome_db_teste = f"tarefas_teste_{qtd}.dat"
+            tarefa.criarBase(nome_db_teste, qtd)
             
-            with open("tarefas_db.dat", 'r+b') as f:
-                ordenacao.insertionSort(f, qtd)
-                
-                id_alvo = qtd
-                
-                inicio_seq = time.perf_counter()
-                _, comp_seq = buscaSequencial(id_alvo, f)
-                tempo_seq = time.perf_counter() - inicio_seq
-                
-                inicio_bin = time.perf_counter()
-                _, comp_bin = buscaBinaria(id_alvo, f, 1, qtd)
-                tempo_bin = time.perf_counter() - inicio_bin
-                
-                arquivo_log.write(
-                    f"Tamanho da Base: {qtd} registros\n"
-                    f"Busca Sequencial -> Comparacoes: {comp_seq} | Tempo (s): {tempo_seq:.6f}\n"
-                    f"Busca Binaria    -> Comparacoes: {comp_bin} | Tempo (s): {tempo_bin:.6f}\n"
-                    f"--------------------------------------------------\n"
-                )
+            inicio_qs = time.perf_counter()
+            with open(nome_db_teste, 'r+b') as f:
+                quicksort_externo.executar(f, 1, qtd)
+            tempo_qs = time.perf_counter() - inicio_qs
+            
+            tarefa.criarBase(nome_db_teste, qtd)
+            
+            inicio_pi = time.perf_counter()
+            with open(nome_db_teste, 'rb') as f:
+                arquivos_part = particoes_intercalacao.gerar_particoes_substituicao(f, qtd, tamanho_memoria=500)
+            
+            nome_db_ordenado = f"tarefas_ordenado_{qtd}.dat"
+            particoes_intercalacao.intercalar_arvore_vencedores(arquivos_part, nome_db_ordenado)
+            tempo_pi = time.perf_counter() - inicio_pi
+            
+            log_str = (
+                f"Tamanho da Base: {qtd} registros\n"
+                f"Quicksort Externo   -> Tempo (s): {tempo_qs:.6f}\n"
+                f"Sel. Substituição + Árvore -> Tempo (s): {tempo_pi:.6f}\n"
+                f"--------------------------------------------------\n"
+            )
+            arquivo_log.write(log_str)
+            print(f"Concluído {qtd} registros. QS: {tempo_qs:.2f}s | Part+Int: {tempo_pi:.2f}s")
+            
+            if os.path.exists(nome_db_teste): os.remove(nome_db_teste)
+            if os.path.exists(nome_db_ordenado): os.remove(nome_db_ordenado)
+            
     print("\n[Sucesso] Testes concluídos. Resultados salvos em 'log.txt'.")
+    print("Agora gere seu relatório final se baseando nas métricas do arquivo de log!")
 
 def menu_principal():
     inicializar_arquivos()
