@@ -4,6 +4,7 @@ import tarefa
 import ordenacao
 import quicksort_externo
 import particoes_intercalacao
+import tabela_hash
 from busca_sequencial import buscaSequencial
 from busca_binaria import buscaBinaria
 
@@ -62,6 +63,8 @@ def executar_testes_desempenho():
 def menu_principal():
     inicializar_arquivos()
     nome_db = "tarefas_db.dat"
+    nome_hash = "tarefas_hash.dat"
+    tabela_hash.inicializar_tabela_hash(nome_hash)
     if not os.path.exists(nome_db):
         tarefa.criarBase(nome_db, 100)
         with open(nome_db, 'r+b') as f:
@@ -76,6 +79,7 @@ def menu_principal():
         print("5. Excluir Tarefa (Logicamente - Busca Binária)")
         print("6. Listar Tarefas por Filtro (Busca Sequencial)")
         print("7. Rodar Testes de Desempenho")
+        print("8. Gerenciamento via Tabela Hash")
         print("0. Sair")
         
         opcao = input("Escolha uma opção: ")
@@ -143,6 +147,49 @@ def menu_principal():
         
         elif opcao == "7":
             executar_testes_desempenho()
+
+        elif opcao == "0":
+            break
+
+        elif opcao == "8":
+            while True:
+                print("\n--- GERENCIAMENTO: TABELA HASH ---")
+                print("1. Inserir Tarefa")
+                print("2. Buscar Tarefa")
+                print("3. Remover Tarefa (Libera espaço)")
+                print("0. Voltar ao Menu Principal")
+                sub_op = input("Escolha: ")
+                
+                if sub_op == "1":
+                    print("\n[Inserindo nova Tarefa na Hash]")
+                    cod = int(input("ID da Tarefa: "))
+                    proj = int(input("ID do Projeto: "))
+                    usu = int(input("ID do Usuário: "))
+                    status = int(input("Status (0/1/2): "))
+                    desc = input("Descrição: ")
+                    
+                    # FALA: "Aqui eu chamo a inserção. Se houver um espaço removido (flag 2), ele será reaproveitado."
+                    tabela_hash.inserir_hash(nome_hash, cod, proj, usu, status, desc)
+                    
+                elif sub_op == "2":
+                    cod = int(input("\nQual ID deseja buscar? "))
+                    # FALA: "A busca calcula o endereço e vai direto no byte certo no disco, complexidade média O(1)."
+                    resultado = tabela_hash.buscar_hash(nome_hash, cod)
+                    if resultado:
+                        print(f"\n[Encontrado no Endereço Físico {resultado['endereco_fisico']}]")
+                        print(f"ID: {resultado['cod']} | Proj: {resultado['projeto_id']} | Usu: {resultado['usuario_id']} | Status: {resultado['status']}")
+                        print(f"Desc: {resultado['descricao']}")
+                    else:
+                        print("\n[Erro] Tarefa não encontrada na Tabela Hash.")
+                        
+                elif sub_op == "3":
+                    cod = int(input("\nQual ID deseja remover? "))
+                    # FALA: "A exclusão é lógica. Eu mudo a Flag do registro para 2 (Removido). Isso cumpre o requisito de Gerenciamento de Espaço."
+                    tabela_hash.remover_hash(nome_hash, cod)
+                    
+                elif sub_op == "0":
+                    break
+        # =========================================================================
 
         elif opcao == "0":
             break
