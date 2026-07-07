@@ -19,22 +19,46 @@ def inicializar_arquivos():
             for i in range(1, 501):
                 f.write(f"{i};Projeto Placeholder {i}\n")
 
+def imprimir_amostra(nome_arquivo, titulo, max_registros=15):
+    """Função auxiliar para imprimir apenas os primeiros registros e não travar o terminal"""
+    print(f"\n>>> {titulo} <<<")
+    if not os.path.exists(nome_arquivo):
+        print("Arquivo não encontrado.")
+        return
+    with open(nome_arquivo, 'rb') as f:
+        for _ in range(max_registros):
+            t = tarefa.le(f)
+            if not t: break
+            print(f"ID: {t['cod']:<6} | Projeto: {t['projeto_id']:<4} | Status: {t['status']}")
+    print(f"... (restante dos registros omitidos no terminal) ...\n")
+
 def executar_testes_desempenho():
     tamanhos_de_base = [1000, 10000, 100000, 500000]
+    
+    mostrar_visual = input("Deseja imprimir a amostra (15 primeiros registros) antes e depois da ordenação? (S/N): ").strip().upper() == 'S'
     
     with open("log.txt", "w", encoding="utf-8") as arquivo_log:
         arquivo_log.write("=== LOG DE DESEMPENHO DE ORDENAÇÃO EXTERNA ===\n\n")
         
         for qtd in tamanhos_de_base:
+            print(f"\n==================================================")
             print(f"Gerando base de {qtd} registros para testes...")
             nome_db_teste = f"tarefas_teste_{qtd}.dat"
             tarefa.criarBase(nome_db_teste, qtd)
+            
+            if mostrar_visual:
+                imprimir_amostra(nome_db_teste, f"BASE {qtd} - DESORDENADA")
             
             inicio_qs = time.perf_counter()
             with open(nome_db_teste, 'r+b') as f:
                 quicksort_externo.executar(f, 1, qtd)
             tempo_qs = time.perf_counter() - inicio_qs
             
+            if mostrar_visual:
+                imprimir_amostra(nome_db_teste, f"BASE {qtd} - ORDENADA PELO QUICKSORT")
+                input("Pressione ENTER para continuar para o teste de Intercalação...")
+            
+            print(f"Recriando base de {qtd} registros para o segundo método...")
             tarefa.criarBase(nome_db_teste, qtd)
             
             inicio_pi = time.perf_counter()
@@ -44,6 +68,10 @@ def executar_testes_desempenho():
             nome_db_ordenado = f"tarefas_ordenado_{qtd}.dat"
             particoes_intercalacao.intercalar_arvore_vencedores(arquivos_part, nome_db_ordenado)
             tempo_pi = time.perf_counter() - inicio_pi
+            
+            if mostrar_visual:
+                imprimir_amostra(nome_db_ordenado, f"BASE {qtd} - ORDENADA POR SELEÇÃO + ÁRVORE")
+                input("Pressione ENTER para ir para o próximo tamanho de base...")
             
             log_str = (
                 f"Tamanho da Base: {qtd} registros\n"
@@ -58,7 +86,6 @@ def executar_testes_desempenho():
             if os.path.exists(nome_db_ordenado): os.remove(nome_db_ordenado)
             
     print("\n[Sucesso] Testes concluídos. Resultados salvos em 'log.txt'.")
-    print("Agora gere seu relatório final se baseando nas métricas do arquivo de log!")
 
 def menu_principal():
     inicializar_arquivos()
