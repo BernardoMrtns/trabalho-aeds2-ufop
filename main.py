@@ -20,7 +20,6 @@ def inicializar_arquivos():
                 f.write(f"{i};Projeto Placeholder {i}\n")
 
 def imprimir_amostra(nome_arquivo, titulo, max_registros=15):
-    """Função auxiliar para imprimir apenas os primeiros registros e não travar o terminal"""
     print(f"\n>>> {titulo} <<<")
     if not os.path.exists(nome_arquivo):
         print("Arquivo não encontrado.")
@@ -184,6 +183,7 @@ def menu_principal():
                 print("1. Inserir Tarefa")
                 print("2. Buscar Tarefa")
                 print("3. Remover Tarefa (Libera espaço)")
+                print("4. Imprimir Estado da Tabela (Prova Visual)")
                 print("0. Voltar ao Menu Principal")
                 sub_op = input("Escolha: ")
                 
@@ -195,12 +195,10 @@ def menu_principal():
                     status = int(input("Status (0/1/2): "))
                     desc = input("Descrição: ")
                     
-                    # FALA: "Aqui eu chamo a inserção. Se houver um espaço removido (flag 2), ele será reaproveitado."
                     tabela_hash.inserir_hash(nome_hash, cod, proj, usu, status, desc)
                     
                 elif sub_op == "2":
                     cod = int(input("\nQual ID deseja buscar? "))
-                    # FALA: "A busca calcula o endereço e vai direto no byte certo no disco, complexidade média O(1)."
                     resultado = tabela_hash.buscar_hash(nome_hash, cod)
                     if resultado:
                         print(f"\n[Encontrado no Endereço Físico {resultado['endereco_fisico']}]")
@@ -211,12 +209,13 @@ def menu_principal():
                         
                 elif sub_op == "3":
                     cod = int(input("\nQual ID deseja remover? "))
-                    # FALA: "A exclusão é lógica. Eu mudo a Flag do registro para 2 (Removido). Isso cumpre o requisito de Gerenciamento de Espaço."
                     tabela_hash.remover_hash(nome_hash, cod)
+
+                elif sub_op == "4":
+                    tabela_hash.imprimir_estado_hash(nome_hash)
                     
                 elif sub_op == "0":
                     break
-        # =========================================================================
 
         elif opcao == "0":
             break
