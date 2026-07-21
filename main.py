@@ -1,5 +1,6 @@
 import time
 import os
+import shutil
 import tarefa
 import ordenacao
 import quicksort_externo
@@ -43,7 +44,11 @@ def executar_testes_desempenho():
             print(f"\n==================================================")
             print(f"Gerando base de {qtd} registros para testes...")
             nome_db_teste = f"tarefas_teste_{qtd}.dat"
+            nome_db_copia = f"tarefas_teste_{qtd}_copia.dat"
+            
             tarefa.criarBase(nome_db_teste, qtd)
+            
+            shutil.copyfile(nome_db_teste, nome_db_copia)
             
             if mostrar_visual:
                 imprimir_amostra(nome_db_teste, f"BASE {qtd} - DESORDENADA")
@@ -57,11 +62,10 @@ def executar_testes_desempenho():
                 imprimir_amostra(nome_db_teste, f"BASE {qtd} - ORDENADA PELO QUICKSORT")
                 input("Pressione ENTER para continuar para o teste de Intercalação...")
             
-            print(f"Recriando base de {qtd} registros para o segundo método...")
-            tarefa.criarBase(nome_db_teste, qtd)
+            print(f"Carregando a cópia idêntica da base para o segundo método...")
             
             inicio_pi = time.perf_counter()
-            with open(nome_db_teste, 'rb') as f:
+            with open(nome_db_copia, 'rb') as f:
                 arquivos_part = particoes_intercalacao.gerar_particoes_substituicao(f, qtd, tamanho_memoria=500)
             
             nome_db_ordenado = f"tarefas_ordenado_{qtd}.dat"

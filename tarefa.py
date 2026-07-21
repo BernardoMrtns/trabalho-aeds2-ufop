@@ -51,12 +51,7 @@ def tamanho_registro():
     return TAMANHO_REGISTRO
 
 def embaralha(lista_ids):
-    tamanho_lista = len(lista_ids)
-    quantidade_trocas = int((tamanho_lista * 60) / 100)
-    for _ in range(quantidade_trocas):
-        indice_a = random.randint(0, tamanho_lista - 1)
-        indice_b = random.randint(0, tamanho_lista - 1)
-        lista_ids[indice_a], lista_ids[indice_b] = lista_ids[indice_b], lista_ids[indice_a]
+    random.shuffle(lista_ids)
 
 def criarBase(nome_arquivo, quantidade_registros):
     lista_ids = list(range(1, quantidade_registros + 1))
