@@ -1,5 +1,3 @@
 /__pycache__
-projetos_db.txt
-tarefas_db.dat
-usuarios_db.txt
-log.txt
+*.txt
+*.dat

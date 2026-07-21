@@ -195,11 +195,25 @@ def menu_principal():
                     status = int(input("Status (0/1/2): "))
                     desc = input("Descrição: ")
                     
-                    tabela_hash.inserir_hash(nome_hash, cod, proj, usu, status, desc)
+                    inicio = time.perf_counter()
+                    sucesso = tabela_hash.inserir_hash(nome_hash, cod, proj, usu, status, desc)
+                    tempo_gasto = time.perf_counter() - inicio
+                    
+                    if sucesso:
+                        with open("log_hash.txt", "a", encoding="utf-8") as log_f:
+                            log_f.write(f"Operação: Inserção | ID: {cod} | Tempo: {tempo_gasto:.6f}s\n")
                     
                 elif sub_op == "2":
                     cod = int(input("\nQual ID deseja buscar? "))
+                    
+                    inicio = time.perf_counter()
                     resultado = tabela_hash.buscar_hash(nome_hash, cod)
+                    tempo_gasto = time.perf_counter() - inicio
+                    
+                    with open("log_hash.txt", "a", encoding="utf-8") as log_f:
+                        status_busca = "Encontrado" if resultado else "Não encontrado"
+                        log_f.write(f"Operação: Busca | ID: {cod} | Status: {status_busca} | Tempo: {tempo_gasto:.6f}s\n")
+                    
                     if resultado:
                         print(f"\n[Encontrado no Endereço Físico {resultado['endereco_fisico']}]")
                         print(f"ID: {resultado['cod']} | Proj: {resultado['projeto_id']} | Usu: {resultado['usuario_id']} | Status: {resultado['status']}")
@@ -209,7 +223,14 @@ def menu_principal():
                         
                 elif sub_op == "3":
                     cod = int(input("\nQual ID deseja remover? "))
-                    tabela_hash.remover_hash(nome_hash, cod)
+                    
+                    inicio = time.perf_counter()
+                    sucesso = tabela_hash.remover_hash(nome_hash, cod)
+                    tempo_gasto = time.perf_counter() - inicio
+                    
+                    if sucesso:
+                        with open("log_hash.txt", "a", encoding="utf-8") as log_f:
+                            log_f.write(f"Operação: Remoção | ID: {cod} | Tempo: {tempo_gasto:.6f}s\n")
 
                 elif sub_op == "4":
                     tabela_hash.imprimir_estado_hash(nome_hash)

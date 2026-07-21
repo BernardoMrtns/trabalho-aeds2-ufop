@@ -119,7 +119,7 @@ def imprimir_estado_hash(nome_arquivo):
     removidos = 0
     vazios = 0
     
-    print("\n--- MAPA FÍSICO DA TABELA HASH (Apenas Ocupados/Removidos) ---")
+    print("\n--- MAPA FÍSICO DA TABELA HASH ---")
     with open(nome_arquivo, 'rb') as f:
         for k in range(M_HASH):
             f.seek(k * TAMANHO_REGISTRO_HASH)
@@ -136,6 +136,7 @@ def imprimir_estado_hash(nome_arquivo):
                 print(f"Endereço {k:04d}: [ REMOVIDO] -> (Espaço marcado para reúso)")
                 removidos += 1
             else:
+                print(f"Endereço {k:04d}: [  VAZIO  ]")
                 vazios += 1
                 
     print("-" * 62)
